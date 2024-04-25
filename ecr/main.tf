@@ -306,5 +306,5 @@ resource "null_resource" "clean-up-images" {
 }
 
 output "INFO" {
-  value = "AWS Resources  has been provisioned. Go to ${aws_ecr_repository.repository-backend.repository_url} and ${aws_ecr_repository.repository-frontend.repository_url}"
+  value = "AWS Resources  has been provisioned. Go to ${aws_ecr_repository.repository_backend.repository_url} and ${aws_ecr_repository.repository_frontend.repository_url}"
 }
