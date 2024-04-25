@@ -190,7 +190,7 @@ resource "aws_ecs_cluster" "cluster" {
 
 # ~~~~~~~~ Create the ECR Repository for the Frontend app ~~~~~~~~~
 
-resource "aws_ecr_repository" "frontend_repository" {
+resource "aws_ecr_repository" "frontend-repository" {
   name = "${var.frontend_app_name}-repo"
 
   image_scanning_configuration {
@@ -201,8 +201,7 @@ resource "aws_ecr_repository" "frontend_repository" {
 }
 
 # ~~~~~~~~ Create the ECR Repository for the Backend app ~~~~~~~~~
-
-resource "aws_ecr_repository" "backend_repository" {
+resource "aws_ecr_repository" "backend-repository" {
   name = "${var.backend_app_name}-repo"
 
   image_scanning_configuration {
@@ -212,7 +211,6 @@ resource "aws_ecr_repository" "backend_repository" {
   force_delete = true
 }
 
-
 # ~~~~~~~~~~~~~~~ Get the ID of the current aws account ~~~~~~~~~~~~~~
 
 data "aws_caller_identity" "current" {}
@@ -221,10 +219,10 @@ data "aws_caller_identity" "current" {}
 
 locals {
   ecr-login             = "aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com"
-  docker-build-frontend = "docker build -t ${aws_ecr_repository.repository_frontend.repository_url}:latest frontend"
-  docker-push-frontend  = "docker push ${aws_ecr_repository.repository_frontend.repository_url}:latest"
-  docker-build-backend  = "docker build -t ${aws_ecr_repository.repository_backend.repository_url}:latest backend"
-  docker-push-backend   = "docker push ${aws_ecr_repository.repository_backend.repository_url}:latest"
+  docker-build-frontend = "docker build -t ${aws_ecr_repository.repository-frontend.repository_url}:latest frontend"
+  docker-push-frontend  = "docker push ${aws_ecr_repository.repository-frontend.repository_url}:latest"
+  docker-build-backend  = "docker build -t ${aws_ecr_repository.repository-backend.repository_url}:latest backend"
+  docker-push-backend   = "docker push ${aws_ecr_repository.repository-backend.repository_url}:latest"
 }
 
 # ~~~~ Log in to the aws ECR service of the current account to have enough rights to push images in ecr ~~~~
@@ -260,7 +258,7 @@ resource "null_resource" "push-to-ecr-frontend" {
 	    command = local.docker-push-frontend
 
 	  }
-     depends_on = [ null_resource.docker-build-frontend ]
+  depends_on = [ null_resource.docker-build-frontend ]
 }
 
 # ~~~~~~~~~~~ Build The Backend Image from the Dockerfile of the backend ~~~~~~~~~~~
@@ -272,7 +270,7 @@ resource "null_resource" "docker-build-backend" {
 	    command = local.docker-build-backend
 
 	  }
-     depends_on = [ null_resource.ecr-login ]
+  depends_on = [ null_resource.ecr-login ]
 }
 
 # ~~~~~~~~~~~~~~~ Push The Backend Image to the backend ECR Repository ~~~~~~~~~~~~~
@@ -300,11 +298,11 @@ resource "null_resource" "clean-up-images" {
         interpreter = [
            "bash",
             "-c"
-        ]
+         ]
 	  }
 	
 }
 
 output "INFO" {
-  value = "AWS Resources  has been provisioned. Go to ${aws_ecr_repository.repository_backend.repository_url} and ${aws_ecr_repository.repository_frontend.repository_url}"
+  value = "AWS Resources  has been provisioned. Go to ${aws_ecr_repository.repository-backend.repository_url} and ${aws_ecr_repository.repository-frontend.repository_url}"
 }
