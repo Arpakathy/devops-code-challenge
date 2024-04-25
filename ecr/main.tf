@@ -201,7 +201,7 @@ resource "aws_ecr_repository" "frontend-repository" {
 }
 
 # ~~~~~~~~ Create the ECR Repository for the Backend app ~~~~~~~~~
-resource "aws_ecr_repository" "backend-repository" {
+resource "aws_ecr_repository" "repository-backend" {
   name = "${var.backend_app_name}-repo"
 
   image_scanning_configuration {
