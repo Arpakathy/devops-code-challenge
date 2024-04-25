@@ -190,7 +190,7 @@ resource "aws_ecs_cluster" "cluster" {
 
 # ~~~~~~~~ Create the ECR Repository for the Frontend app ~~~~~~~~~
 
-resource "aws_ecr_repository" "frontend-repository" {
+resource "aws_ecr_repository" "repository-frontend" {
   name = "${var.frontend_app_name}-repo"
 
   image_scanning_configuration {
